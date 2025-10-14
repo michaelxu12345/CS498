@@ -62,6 +62,7 @@ def worker(params):
     # ---- receive updated params, write into local model ----
     recv_buf = flat_grad.clone()
     r = dist.wait(recv_buf, src=0)
+    r.wait()
     
     #                                                                   #
     #                                                                   #
