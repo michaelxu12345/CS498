@@ -26,6 +26,7 @@ def server(params, opt, world):
     r.wait()
     agg = agg + recv_buf
     
+    agg /= 2
 
     synced_grads = _unflatten_dense_tensors(agg, [p.grad for p in params])
     # ---- set averaged grads locally & step ----
@@ -61,7 +62,7 @@ def worker(params):
 
     # ---- receive updated params, write into local model ----
     recv_buf = flat_grad.clone()
-    r = dist.wait(recv_buf, src=0)
+    r = dist.irecv(recv_buf, src=0)
     r.wait()
     
     #                                                                   #
